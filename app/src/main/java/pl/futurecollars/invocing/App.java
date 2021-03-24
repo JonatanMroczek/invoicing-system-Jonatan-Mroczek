@@ -4,11 +4,11 @@
 package pl.futurecollars.invocing;
 
 public class App {
-    public String getGreetings() {
-        return "Hello World!";
+    public String getGreeting() {
+        return null;
     }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreetings());
+        System.out.println(new App().getGreeting());
     }
 }
