@@ -10,11 +10,15 @@ import pl.futurecollars.invoicing.model.Invoice;
 import pl.futurecollars.invoicing.model.InvoiceEntry;
 import pl.futurecollars.invoicing.model.Vat;
 import pl.futurecollars.invoicing.service.InvoiceService;
+import pl.futurecollars.invoicing.utils.FilesService;
+import pl.futurecollars.invoicing.utils.JsonService;
 
 public class App {
 
     public static void main(String[] args) {
         Database db = new InMemoryDatabase();
+        FilesService filesService = new FilesService();
+        JsonService jsonService = new JsonService();
 
         InvoiceService service = new InvoiceService(db);
 
