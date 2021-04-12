@@ -4,21 +4,23 @@ import pl.futurecollars.invoicing.db.Database
 import pl.futurecollars.invoicing.db.memory.InMemoryDatabase
 import pl.futurecollars.invoicing.model.Invoice
 import spock.lang.Specification
+import static pl.futurecollars.invoicing.Helpers.TestHelpers.invoice
 
-import static pl.futurecollars.invoicing.helpers.TestHelpers;
-class InMemoryDatabaseTest extends Specification {
+ class InMemoryDatabaseTest extends Specification {
 
-    private Database database
-    private List<Invoice> invoices
+     private Database database
+     private List<Invoice> invoices
 
 
-    def setup() {
-        database = new InMemoryDatabase()
+     def setup() {
+         database = new InMemoryDatabase()
 
-        invoices = (1..12).collect { invoice(it) }
-    }
+         invoices = (1..12).collect { invoice(it) }
+     }
 
-    def "should save invoices returning sequential id, invoice should have id set to correct value, get by id returns saved invoice"() {
+
+
+     def "should save invoices returning sequential id, invoice should have id set to correct value, get by id returns saved invoice"() {
         when:
         def ids = invoices.collect({ database.save(it) })
 

@@ -1,5 +1,9 @@
 package pl.futurecollars.invoicing;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -15,7 +19,7 @@ import pl.futurecollars.invoicing.utils.JsonService;
 
 public class App {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Database db = new InMemoryDatabase();
         FilesService filesService = new FilesService();
         JsonService jsonService = new JsonService();
@@ -31,6 +35,12 @@ public class App {
         Invoice invoice = new Invoice(LocalDate.now(), buyer, seller, products);
 
         int id = service.save(invoice);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.writeValue(new File("invoices.json"),invoice);
+        objectMapper.readValue(new File("invoices.json"), Invoice.class);
+
+
         System.out.println(id);
 
         service.getById(id).ifPresent(System.out::println);
