@@ -1,22 +1,20 @@
-package pl.futurecollars.invoicing.db
+package pl.futurecollars.invoicing.db.memory
 
+import pl.futurecollars.invoicing.db.Database
 import pl.futurecollars.invoicing.db.memory.InMemoryDatabase
 import pl.futurecollars.invoicing.model.Invoice
 import spock.lang.Specification
 
-import static pl.futurecollars.invoicing.TestHelpers.invoice
+import static pl.futurecollars.invoicing.Helpers.TestHelpers.invoice
 
-class InMemoryDatabaseTest extends Specification {
-
-    private Database database
-    private List<Invoice> invoices
+abstract class AbsteactInMemoryDatabaseTest extends Specification {
 
 
-    def setup() {
-        database = new InMemoryDatabase()
+    List<Invoice> invoices = (1..12).collect { invoice(it) }
+    Database database = getDatabaseInstance()
 
-        invoices = (1..12).collect { invoice(it) }
-    }
+    abstract Database getDatabaseInstance()
+
 
     def "should save invoices returning sequential id, invoice should have id set to correct value, get by id returns saved invoice"() {
         when:
