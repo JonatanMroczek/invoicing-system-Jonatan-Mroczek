@@ -21,4 +21,5 @@ public class Invoice {
         this.seller = seller;
         this.entries = entries;
     }
+
 }

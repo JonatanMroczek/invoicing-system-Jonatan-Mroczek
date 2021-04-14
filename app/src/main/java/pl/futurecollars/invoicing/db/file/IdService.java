@@ -3,8 +3,14 @@ package pl.futurecollars.invoicing.db.file;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import pl.futurecollars.invoicing.utils.FilesService;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class IdService {
 
     private Path idFilePath;
@@ -29,14 +35,15 @@ public class IdService {
 
         }
     }
-        public int getNextIdAndIncrement() {
-            try {
-                filesService.writeToFile(idFilePath, String.valueOf(nextID + 1));
-                return nextID++;
-            } catch (IOException ex) {
-                throw new RuntimeException("Failed to read id file", ex);
-            }
-        }
 
+    public int getNextIdAndIncrement() {
+        try {
+            filesService.writeToFile(idFilePath, String.valueOf(nextID + 1));
+            return nextID++;
+        } catch (IOException ex) {
+            throw new RuntimeException("Failed to read id file", ex);
+        }
     }
+
+}
 

@@ -1,6 +1,7 @@
 package pl.futurecollars.invoicing.utils;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -9,11 +10,11 @@ import java.util.List;
 public class FilesService {
 
     public void appendLineToFile(Path path, String line) throws IOException {
-        Files.write(path, (line + System.lineSeparator()).getBytes(), StandardOpenOption.APPEND);
+        Files.write(path, (line + System.lineSeparator()).getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
     }
 
     public void writeToFile(Path path, String line) throws IOException {
-        Files.write(path, line.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
+        Files.write(path, line.getBytes(StandardCharsets.UTF_8), StandardOpenOption.TRUNCATE_EXISTING);
     }
 
     public void writeLinesToFile(Path path, List<String> lines) throws IOException {

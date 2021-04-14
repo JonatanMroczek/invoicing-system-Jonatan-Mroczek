@@ -14,7 +14,6 @@ public class JsonService {
         objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
         objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
     }
@@ -29,7 +28,7 @@ public class JsonService {
 
     public Invoice toJavaObject(String jsonString) {
         try {
-          return  objectMapper.readValue(jsonString, Invoice.class);
+            return objectMapper.readValue(jsonString, Invoice.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("problems encountered when processing (parsing, generating)");
         }

@@ -34,12 +34,11 @@ public class App {
 
         Invoice invoice = new Invoice(LocalDate.now(), buyer, seller, products);
 
-        int id = service.save(invoice);
+        final int id = service.save(invoice);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.writeValue(new File("invoices.json"),invoice);
+        objectMapper.writeValue(new File("invoices.json"), invoice);
         objectMapper.readValue(new File("invoices.json"), Invoice.class);
-
 
         System.out.println(id);
 
@@ -49,6 +48,7 @@ public class App {
 
         service.delete(id);
     }
+
 }
 
 

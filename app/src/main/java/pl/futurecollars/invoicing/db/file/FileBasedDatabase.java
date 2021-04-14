@@ -23,6 +23,7 @@ public class FileBasedDatabase implements Database {
     public int save(Invoice invoice) {
         invoice.setId(idService.getNextIdAndIncrement());
         try {
+
             filesService.appendLineToFile(databasePath, jsonService.toJsonObject(invoice));
             return invoice.getId();
         } catch (IOException ex) {
@@ -71,7 +72,8 @@ public class FileBasedDatabase implements Database {
                 throw new IllegalArgumentException("Id " + id + " does not exist");
             }
             updatedInvoice.setId(id);
-            listWithoutInvoiceWithGivenId.add(jsonService.toJsonObject((updatedInvoice)));
+
+            listWithoutInvoiceWithGivenId.add(jsonService.toJsonObject(updatedInvoice));
 
             filesService.writeLinesToFile(databasePath, listWithoutInvoiceWithGivenId);
 
