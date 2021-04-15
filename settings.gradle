@@ -8,4 +8,4 @@
  */
 
 rootProject.name = 'invoicing-system-jonatan-mroczek'
-include('app')
+

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import org.checkerframework.checker.nullness.Opt;
 import pl.futurecollars.invoicing.db.Database;
 import pl.futurecollars.invoicing.model.Invoice;
 
@@ -31,17 +32,16 @@ public class InMemoryDatabase implements Database {
     }
 
     @Override
-    public void update(int id, Invoice updatedInvoice) {
-        if (!invoices.containsKey(id)) {
-            throw new IllegalArgumentException("Id " + id + " does not exist");
-        }
-        updatedInvoice.setId(id);
-        invoices.put(id, updatedInvoice);
+    public Optional<Invoice> update(int id, Invoice updatedInvoice) {
+       updatedInvoice.setId(id);
+       return Optional.ofNullable(invoices.put(id, updatedInvoice));
+
     }
 
     @Override
-    public void delete(int id) {
-        invoices.remove(id);
+    public Optional<Invoice> delete(int id) {
+       return Optional.ofNullable(invoices.remove(id));
+
 
     }
 

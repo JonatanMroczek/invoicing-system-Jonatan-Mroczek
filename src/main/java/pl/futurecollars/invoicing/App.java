@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import pl.futurecollars.invoicing.db.Database;
 import pl.futurecollars.invoicing.db.memory.InMemoryDatabase;
 import pl.futurecollars.invoicing.model.Company;
@@ -17,10 +19,13 @@ import pl.futurecollars.invoicing.service.InvoiceService;
 import pl.futurecollars.invoicing.utils.FilesService;
 import pl.futurecollars.invoicing.utils.JsonService;
 
+@SpringBootApplication
 public class App {
 
-    public static void main(String[] args) throws IOException {
-        Database db = new InMemoryDatabase();
+    public static void main(String[] args)  {
+        SpringApplication.run(App.class, args);
+    }
+       /* Database db = new InMemoryDatabase();
         FilesService filesService = new FilesService();
         JsonService jsonService = new JsonService();
 
@@ -47,7 +52,7 @@ public class App {
         System.out.println(service.getAll());
 
         service.delete(id);
-    }
+    }*/
 
 }
 

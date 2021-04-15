@@ -27,6 +27,8 @@ abstract class AbsteactInMemoryDatabaseTest extends Specification {
         ids.forEach({ assert database.getById(it).get() == invoices.get(it - 1) })
     }
 
+
+
     def "get by id returns empty optional when there is no invoice with given id"() {
         expect:
         database.getById(1).isEmpty()
@@ -53,10 +55,20 @@ abstract class AbsteactInMemoryDatabaseTest extends Specification {
         then:
         database.getById(1).isEmpty()
     }
+    def "can delete all invoices"() {
+        given:
+        invoices.forEach({ database.save(it) })
+
+        when:
+        invoices.forEach({ database.delete(it.getId()) })
+
+        then:
+        database.getAll().isEmpty()
+    }
 
     def "deleting not existing invoice does not cause any error"() {
         expect:
-        database.delete(100)
+        database.delete(100) == Optional.empty();
     }
 
     def "it's possible to update invoice"() {
@@ -68,12 +80,11 @@ abstract class AbsteactInMemoryDatabaseTest extends Specification {
         database.getById(id).get() == invoices.get(1)
     }
 
-    def "updating not existing invoice throws and exception"() {
-        when:
-        database.update(100, invoices.get(0))
-        then:
-        def ex = thrown(IllegalArgumentException)
-        ex.message == "Id 100 does not exist"
+    def "updating not existing invoice returns Optional.empty"() {
+        expect:
+        database.update(120, invoices.get(1)) == Optional.empty()
+
+
 
     }
 

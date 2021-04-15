@@ -26,9 +26,9 @@ public class JsonService {
         }
     }
 
-    public Invoice toJavaObject(String jsonString) {
+    public <T> T toJavaObject(String jsonString, Class <T> clazz) {
         try {
-            return objectMapper.readValue(jsonString, Invoice.class);
+            return objectMapper.readValue(jsonString, clazz);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("problems encountered when processing (parsing, generating)");
         }
