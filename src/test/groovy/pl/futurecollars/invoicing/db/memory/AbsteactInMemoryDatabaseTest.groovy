@@ -1,7 +1,6 @@
 package pl.futurecollars.invoicing.db.memory
 
 import pl.futurecollars.invoicing.db.Database
-import pl.futurecollars.invoicing.db.memory.InMemoryDatabase
 import pl.futurecollars.invoicing.model.Invoice
 import spock.lang.Specification
 
@@ -26,7 +25,6 @@ abstract class AbsteactInMemoryDatabaseTest extends Specification {
         ids.forEach({ assert database.getById(it).get().getId() == it })
         ids.forEach({ assert database.getById(it).get() == invoices.get(it - 1) })
     }
-
 
 
     def "get by id returns empty optional when there is no invoice with given id"() {
@@ -55,6 +53,7 @@ abstract class AbsteactInMemoryDatabaseTest extends Specification {
         then:
         database.getById(1).isEmpty()
     }
+
     def "can delete all invoices"() {
         given:
         invoices.forEach({ database.save(it) })
@@ -83,7 +82,6 @@ abstract class AbsteactInMemoryDatabaseTest extends Specification {
     def "updating not existing invoice returns Optional.empty"() {
         expect:
         database.update(120, invoices.get(1)) == Optional.empty()
-
 
 
     }

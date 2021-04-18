@@ -38,7 +38,7 @@ public class FileBasedDatabase implements Database {
             return filesService.readAllLines(databasePath)
                 .stream()
                 .filter(line -> containsId(line, id))
-                .map(line ->jsonService.toJavaObject(line, Invoice.class))
+                .map(line -> jsonService.toJavaObject(line, Invoice.class))
                 .findFirst();
         } catch (IOException ex) {
             throw new RuntimeException("Database failed to get invoice with id: " + id, ex);
@@ -103,7 +103,7 @@ public class FileBasedDatabase implements Database {
             return allInvoices.isEmpty() ? Optional.empty() : Optional.of(jsonService.toJavaObject(allInvoices.get(0), Invoice.class));
 
         } catch (IOException e) {
-            throw new RuntimeException("Failed to delete invoice with id " +id);
+            throw new RuntimeException("Failed to delete invoice with id " + id);
         }
     }
 

@@ -12,7 +12,7 @@ public interface Database {
 
     List<Invoice> getAll();
 
-    Optional <Invoice> update(int id, Invoice updatedInvoice);
+    Optional<Invoice> update(int id, Invoice updatedInvoice);
 
     Optional<Invoice> delete(int id);
 

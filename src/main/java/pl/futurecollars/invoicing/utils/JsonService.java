@@ -26,7 +26,7 @@ public class JsonService {
         }
     }
 
-    public <T> T toJavaObject(String jsonString, Class <T> clazz) {
+    public <T> T toJavaObject(String jsonString, Class<T> clazz) {
         try {
             return objectMapper.readValue(jsonString, clazz);
         } catch (JsonProcessingException e) {

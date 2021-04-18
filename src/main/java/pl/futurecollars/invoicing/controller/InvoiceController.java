@@ -31,7 +31,6 @@ public class InvoiceController {
         return invoiceService.save(invoice);
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Invoice>> getById(@PathVariable int id) {
         return Optional.ofNullable(invoiceService.getById(id))
@@ -41,17 +40,19 @@ public class InvoiceController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity <?> deleteById (@PathVariable int id) {
+    public ResponseEntity<?> deleteById(@PathVariable int id) {
         return invoiceService.delete(id)
             .map(invoice -> ResponseEntity.noContent().build())
             .orElse(ResponseEntity.notFound().build());
 
     }
-@PutMapping("{/id}")
-public ResponseEntity<?> update (@PathVariable int id, @RequestBody Invoice invoiceRq) {
-        return invoiceService.update(id, invoiceRq)
-            .map(invoice -> ResponseEntity.noContent().build()).
-            orElse(ResponseEntity.notFound().build());
 
-}
+    @PutMapping("{/id}")
+    public ResponseEntity<?> update(@PathVariable int id, @RequestBody Invoice invoiceRq) {
+        return invoiceService.update(id, invoiceRq)
+            .map(invoice -> ResponseEntity.noContent().build())
+            .orElse(ResponseEntity.notFound().build());
+
+    }
+
 }
