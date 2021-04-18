@@ -63,14 +63,19 @@ jacocoTestReport {
 jacoco {
     toolVersion = "0.8.6"
 }
-jacocoTestCoverageVerification {
-    violationRules {
-        rule {
-            limit {
-                minimum = 0.9
+
+    jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                includes = ['com/myapp/*']
+                excludes = [
+                        'com/myapp/Controller/*',
+                ]
+                limit {
+                    minimum = 0.9
+                }
             }
         }
-
     }
-}
+
 
