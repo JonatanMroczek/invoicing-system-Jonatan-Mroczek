@@ -91,7 +91,7 @@ public class FileBasedDatabase implements Database {
         try {
             var allInvoices = filesService.readAllLines(databasePath);
 
-            var updatedList = filesService.readAllLines(databasePath)
+            var updatedList = allInvoices
                 .stream()
                 .filter(line -> !containsId(line, id))
                 .collect(Collectors.toList());

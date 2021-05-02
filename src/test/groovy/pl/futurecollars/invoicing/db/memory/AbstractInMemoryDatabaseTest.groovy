@@ -6,13 +6,15 @@ import spock.lang.Specification
 
 import static pl.futurecollars.invoicing.Helpers.TestHelpers.invoice
 
-abstract class AbsteactInMemoryDatabaseTest extends Specification {
+abstract class AbstractInMemoryDatabaseTest extends Specification {
 
 
     List<Invoice> invoices = (1..12).collect { invoice(it) }
     Database database = getDatabaseInstance()
 
     abstract Database getDatabaseInstance()
+
+
 
 
     def "should save invoices returning sequential id, invoice should have id set to correct value, get by id returns saved invoice"() {
@@ -25,6 +27,7 @@ abstract class AbsteactInMemoryDatabaseTest extends Specification {
         ids.forEach({ assert database.getById(it).get().getId() == it })
         ids.forEach({ assert database.getById(it).get() == invoices.get(it - 1) })
     }
+
 
 
     def "get by id returns empty optional when there is no invoice with given id"() {
@@ -65,7 +68,7 @@ abstract class AbsteactInMemoryDatabaseTest extends Specification {
         database.getAll().isEmpty()
     }
 
-    def "deleting not existing invoice does not cause any error"() {
+    def "deleting not existing invoice returns empty optional"() {
         expect:
         database.delete(100) == Optional.empty();
     }
