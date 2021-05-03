@@ -31,9 +31,10 @@ class InvoiceServiceIntegrationTest extends Specification {
         ids.collect({ assert service.getById(it).get() == invoices.get(it - 1) })
 
     }
+
     def "should throw exception when saving invoice"() {
         setup:
-        mockedDb.save(1) >> {throw new RuntimeException()}
+        mockedDb.save(1) >> { throw new RuntimeException() }
 
         when:
         mockedService.save(1)
@@ -67,9 +68,10 @@ class InvoiceServiceIntegrationTest extends Specification {
         then:
         service.getById(1).isEmpty()
     }
+
     def "should throw exception when deleting invoice"() {
         setup:
-        mockedDb.delete(1) >> {throw new RuntimeException()}
+        mockedDb.delete(1) >> { throw new RuntimeException() }
 
         when:
         mockedService.delete(1)
@@ -100,9 +102,10 @@ class InvoiceServiceIntegrationTest extends Specification {
         service.update(100, invoices.get(1)) == Optional.empty()
 
     }
+
     def "should throw exception when updating invoice"() {
         setup:
-        mockedDb.update(1, invoices.get(5)) >> {throw new RuntimeException()}
+        mockedDb.update(1, invoices.get(5)) >> { throw new RuntimeException() }
 
         when:
         mockedService.update(1, invoices.get(5))
