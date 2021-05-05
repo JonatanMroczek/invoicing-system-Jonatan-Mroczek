@@ -15,8 +15,6 @@ abstract class AbstractInMemoryDatabaseTest extends Specification {
     abstract Database getDatabaseInstance()
 
 
-
-
     def "should save invoices returning sequential id, invoice should have id set to correct value, get by id returns saved invoice"() {
         when:
         def ids = invoices.collect({ database.save(it) })
@@ -27,7 +25,6 @@ abstract class AbstractInMemoryDatabaseTest extends Specification {
         ids.forEach({ assert database.getById(it).get().getId() == it })
         ids.forEach({ assert database.getById(it).get() == invoices.get(it - 1) })
     }
-
 
 
     def "get by id returns empty optional when there is no invoice with given id"() {

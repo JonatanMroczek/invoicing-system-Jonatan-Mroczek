@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.futurecollars.invoicing.db.memory.InMemoryDatabase;
 import pl.futurecollars.invoicing.model.Invoice;
 import pl.futurecollars.invoicing.service.InvoiceService;
 
@@ -19,7 +18,11 @@ import pl.futurecollars.invoicing.service.InvoiceService;
 @RequestMapping("/invoices")
 public class InvoiceController {
 
-    private final InvoiceService invoiceService = new InvoiceService(new InMemoryDatabase());
+    private InvoiceService invoiceService;
+
+    public InvoiceController(InvoiceService invoiceService) {
+        this.invoiceService = invoiceService;
+    }
 
     @GetMapping
     List<Invoice> getAll() {
