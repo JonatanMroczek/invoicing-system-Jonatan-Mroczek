@@ -1,7 +1,6 @@
 package pl.futurecollars.invoicing.controller;
 
 import java.util.List;
-import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,8 +23,8 @@ public class InvoiceController {
         this.invoiceService = invoiceService;
     }
 
-    @GetMapping
-    List<Invoice> getAll() {
+    @GetMapping(produces = {"application/json;charset=UTF-8"})
+    public List<Invoice> getAll() {
         return invoiceService.getAll();
     }
 
@@ -34,9 +33,9 @@ public class InvoiceController {
         return invoiceService.save(invoice);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Optional<Invoice>> getById(@PathVariable int id) {
-        return Optional.ofNullable(invoiceService.getById(id))
+    @GetMapping(value = "/{id}", produces = {"application/json;charset=UTF-8"})
+    public ResponseEntity<Invoice> getById(@PathVariable int id) {
+        return invoiceService.getById(id)
             .map(invoice -> ResponseEntity.ok().body(invoice))
             .orElse(ResponseEntity.notFound().build());
 
@@ -45,12 +44,11 @@ public class InvoiceController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable int id) {
         return invoiceService.delete(id)
-            .map(invoice -> ResponseEntity.noContent().build())
+            .map(name -> ResponseEntity.noContent().build())
             .orElse(ResponseEntity.notFound().build());
-
     }
 
-    @PutMapping("{/id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable int id, @RequestBody Invoice invoiceRq) {
         return invoiceService.update(id, invoiceRq)
             .map(invoice -> ResponseEntity.noContent().build())
