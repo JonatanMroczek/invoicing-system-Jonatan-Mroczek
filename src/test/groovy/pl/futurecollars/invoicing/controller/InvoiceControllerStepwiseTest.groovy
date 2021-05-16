@@ -10,7 +10,6 @@ import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.utils.JsonService
 import spock.lang.Specification
 import spock.lang.Stepwise
-
 import java.time.LocalDate
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
@@ -20,7 +19,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Stepwise
-
 
 class InvoiceControllerStepwiseTest extends Specification {
 
@@ -149,6 +147,5 @@ class InvoiceControllerStepwiseTest extends Specification {
         and:
         mockMvc.perform(get("/$ENDPOINT/1")).andExpect(status().isNotFound())
     }
-
 
 }
