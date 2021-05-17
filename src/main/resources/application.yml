@@ -1,0 +1,9 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+server:
+  port: 5566
+application:
+  database: localdb
+
