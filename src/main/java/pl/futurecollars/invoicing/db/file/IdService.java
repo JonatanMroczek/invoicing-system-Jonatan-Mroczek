@@ -12,7 +12,6 @@ import pl.futurecollars.invoicing.utils.FilesService;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Repository
 public class IdService {
 
     private Path idFilePath;
