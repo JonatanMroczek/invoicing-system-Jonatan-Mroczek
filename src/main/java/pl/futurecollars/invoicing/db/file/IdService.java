@@ -6,11 +6,13 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Repository;
 import pl.futurecollars.invoicing.utils.FilesService;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Repository
 public class IdService {
 
     private Path idFilePath;

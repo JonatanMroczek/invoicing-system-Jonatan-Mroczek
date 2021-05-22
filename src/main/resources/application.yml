@@ -2,8 +2,23 @@ spring:
   main:
     allow-bean-definition-overriding: true
 
-server:
-  port: 5566
-application:
-  database: localdb
+invoicing-system:
+  database: file
+  database.directory: db
+  database.invoices.file: invoices.txt
+  database.id.file: id.txt
+
+logging:
+  level:
+    org:
+      springframework:
+        boot: INFO
+
+    pl:
+      futurecollars:
+        invoicing: INFO
+        invoicing.db: DEBUG
+
+
+
 
