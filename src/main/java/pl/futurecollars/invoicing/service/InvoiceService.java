@@ -2,7 +2,6 @@ package pl.futurecollars.invoicing.service;
 
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import pl.futurecollars.invoicing.db.Database;
 import pl.futurecollars.invoicing.model.Invoice;
@@ -12,7 +11,7 @@ public class InvoiceService {
 
     private final Database db;
 
-    public InvoiceService(@Qualifier("fileBasedDatabase") Database db) {
+    public InvoiceService(Database db) {
         this.db = db;
     }
 

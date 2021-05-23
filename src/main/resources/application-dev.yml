@@ -1,0 +1,7 @@
+server:
+  port: 8888
+
+invoicing-system:
+  database: memory
+  databse.directory: db
+
