@@ -15,6 +15,7 @@ buildscript {
         springFoxUiVersion = '3.0.0'
 
 
+
     }
 }
 plugins {
@@ -52,6 +53,7 @@ dependencies {
     testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
     testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.spockframework:spock-spring:${spockVersion}"
