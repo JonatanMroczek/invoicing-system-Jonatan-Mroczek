@@ -14,7 +14,7 @@ class TestHelpers {
     }
 
     static product(int id) {
-        new InvoiceEntry("Ozonowanie $id", BigDecimal.valueOf(id * 100), BigDecimal.valueOf(id * 100 * 0.08), Vat.VAT_8)
+        new InvoiceEntry("Ozonowanie $id", 1, BigDecimal.valueOf(id * 100), BigDecimal.valueOf(id * 100 * 0.08), Vat.VAT_8)
     }
 
     static invoice(int id) {
