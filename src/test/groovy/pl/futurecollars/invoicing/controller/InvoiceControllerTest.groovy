@@ -5,10 +5,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.ResultActions
-import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.utils.JsonService
-import spock.lang.Specification
 import spock.lang.Unroll
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
@@ -18,19 +15,14 @@ import static pl.futurecollars.invoicing.Helpers.TestHelpers.invoice
 @SpringBootTest
 @AutoConfigureMockMvc
 @Unroll
-class InvoiceControllerTest extends Specification {
+class InvoiceControllerTest extends AbstractControllerTest {
 
-    private static final String ENDPOINT = "/invoices"
 
     @Autowired
     private MockMvc mockMvc
 
     @Autowired
     private JsonService jsonService
-
-    def setup() {
-        getAllInvoices().each { invoice -> deleteInvoice(invoice.id) }
-    }
 
 
     def "get all invoices returns empty array when no invoices added"() {
@@ -146,58 +138,6 @@ class InvoiceControllerTest extends Specification {
         expect:
         invoices.each { invoice -> deleteInvoice(invoice.getId()) }
         getAllInvoices().size() == 0
-    }
-
-    private int addInvoiceAndReturnId(String invoiceAsJson) {
-        Integer.valueOf(
-                mockMvc.perform(
-                        post(ENDPOINT)
-                                .content(invoiceAsJson)
-                                .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(status()
-                                .isOk())
-                        .andReturn()
-                        .response.contentAsString)
-    }
-
-    private ResultActions deleteInvoice(int id) {
-        mockMvc.perform(delete("$ENDPOINT/$id"))
-                .andExpect(status().isNoContent())
-
-    }
-
-    private List<Invoice> getAllInvoices() {
-        def response = mockMvc.perform(get("$ENDPOINT"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .response
-                .contentAsString
-
-        return jsonService.toJavaObject(response, Invoice[])
-    }
-
-
-    private List<Invoice> addUniqueInvoices(int count) {
-        (1..count).collect { id ->
-            def invoice = invoice(id)
-            invoice.id = addInvoiceAndReturnId(jsonService.toJsonObject(invoice))
-
-            return invoice
-        }
-    }
-
-    private Invoice getInvoiceById(int id) {
-        def invoiceAsString = mockMvc.perform(get("$ENDPOINT/$id")).andExpect(status().isOk())
-                .andReturn()
-                .response
-                .contentAsString
-
-        jsonService.toJavaObject(invoiceAsString, Invoice)
-    }
-
-
-    private String invoiceAsJson(int id) {
-        jsonService.toJsonObject(invoice(id))
     }
 
 

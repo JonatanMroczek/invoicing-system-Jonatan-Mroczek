@@ -23,12 +23,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class InvoiceControllerStepwiseTest extends Specification {
 
-    public static final String ENDPOINT = "/invoices"
     @Autowired
     private MockMvc mockMvc
 
     @Autowired
     private JsonService jsonService
+
+    private static final String ENDPOINT = "/invoices"
+
 
     private Invoice originalInvoice = TestHelpers.invoice(1)
 
