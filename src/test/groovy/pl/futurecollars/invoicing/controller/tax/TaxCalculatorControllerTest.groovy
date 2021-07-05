@@ -1,12 +1,17 @@
 package pl.futurecollars.invoicing.controller.tax
 
 
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import pl.futurecollars.invoicing.controller.AbstractControllerTest
+import pl.futurecollars.invoicing.model.Car
+import pl.futurecollars.invoicing.model.Company
+import pl.futurecollars.invoicing.model.Invoice
+import pl.futurecollars.invoicing.model.InvoiceEntry
 import spock.lang.Unroll
 
+import static pl.futurecollars.invoicing.Helpers.TestHelpers.company
+
 @Unroll
-@AutoConfigureMockMvc
+
 class TaxCalculatorControllerTest extends AbstractControllerTest {
 
 
@@ -17,10 +22,11 @@ class TaxCalculatorControllerTest extends AbstractControllerTest {
         then:
         taxCalculatorResponse.income == 0
         taxCalculatorResponse.costs == 0
-        taxCalculatorResponse.earnings == 0
-        taxCalculatorResponse.incomingVat == 0
-        taxCalculatorResponse.outgoingVat == 0
-        taxCalculatorResponse.vatToPay == 0
+        taxCalculatorResponse.incomeMinusCosts == 0
+        taxCalculatorResponse.paidVat == 0
+        taxCalculatorResponse.collectedVat == 0
+        taxCalculatorResponse.vatToReturn == 0
+
 
     }
 
@@ -35,10 +41,10 @@ class TaxCalculatorControllerTest extends AbstractControllerTest {
         then:
         taxCalculatorResponse.income == 0
         taxCalculatorResponse.costs == 0
-        taxCalculatorResponse.earnings == 0
-        taxCalculatorResponse.incomingVat == 0
-        taxCalculatorResponse.outgoingVat == 0
-        taxCalculatorResponse.vatToPay == 0
+        taxCalculatorResponse.incomeMinusCosts == 0
+        taxCalculatorResponse.collectedVat == 0
+        taxCalculatorResponse.paidVat == 0
+        taxCalculatorResponse.vatToReturn == 0
     }
 
     def "sum of all products is returned for given id"() {
@@ -51,10 +57,10 @@ class TaxCalculatorControllerTest extends AbstractControllerTest {
         then:
         taxCalculatorResponse.income == 3000
         taxCalculatorResponse.costs == 0
-        taxCalculatorResponse.earnings == 3000
-        taxCalculatorResponse.incomingVat == 240.0
-        taxCalculatorResponse.outgoingVat == 0
-        taxCalculatorResponse.vatToPay == 240.0
+        taxCalculatorResponse.incomeMinusCosts == 3000
+        taxCalculatorResponse.collectedVat == 240.0
+        taxCalculatorResponse.paidVat == 0
+        taxCalculatorResponse.vatToReturn == 240.0
 
         when:
         taxCalculatorResponse = calculateTax("11")
@@ -62,10 +68,10 @@ class TaxCalculatorControllerTest extends AbstractControllerTest {
         then:
         taxCalculatorResponse.income == 0
         taxCalculatorResponse.costs == 1000
-        taxCalculatorResponse.earnings == -1000
-        taxCalculatorResponse.incomingVat == 0
-        taxCalculatorResponse.outgoingVat == 80
-        taxCalculatorResponse.vatToPay == -80.0
+        taxCalculatorResponse.incomeMinusCosts == -1000
+        taxCalculatorResponse.collectedVat == 0
+        taxCalculatorResponse.paidVat == 80
+        taxCalculatorResponse.vatToReturn == -80.0
     }
 
     def "correct sum is returned if company is buyer and seller"() {
@@ -78,10 +84,10 @@ class TaxCalculatorControllerTest extends AbstractControllerTest {
         then:
         taxCalculatorResponse.income == 66000
         taxCalculatorResponse.costs == 1000
-        taxCalculatorResponse.earnings == 65000
-        taxCalculatorResponse.incomingVat == 5280.0
-        taxCalculatorResponse.outgoingVat == 80.0
-        taxCalculatorResponse.vatToPay == 5200.0
+        taxCalculatorResponse.incomeMinusCosts == 65000
+        taxCalculatorResponse.collectedVat == 5280.0
+        taxCalculatorResponse.paidVat == 80.0
+        taxCalculatorResponse.vatToReturn == 5200.0
     }
 
 
