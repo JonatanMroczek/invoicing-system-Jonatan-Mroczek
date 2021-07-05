@@ -21,7 +21,7 @@ public class InvoiceEntry {
     private int quantity;
 
     @ApiModelProperty(value = "Product/service net price", required = true, example = "250.01")
-    private BigDecimal price;
+    private BigDecimal netPrice;
 
     @ApiModelProperty(value = "Tax value of product/service", required = true, example = "50.01")
     @Builder.Default

@@ -19,9 +19,9 @@ public class JsonService {
 
     }
 
-    public String toJsonObject(Invoice invoice) {
+    public String toJsonObject(Object object) {
         try {
-            return objectMapper.writeValueAsString(invoice);
+            return objectMapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Problems encountered when processing (parsing, generating)");
         }
