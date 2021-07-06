@@ -5,6 +5,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
+import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.utils.JsonService
 import spock.lang.Unroll
 
@@ -46,15 +47,15 @@ class InvoiceControllerTest extends AbstractControllerTest {
 
     def "add invoice returns sequential id"() {
         given:
-        def invoiceAsJson = invoiceAsJson(1)
+        def Invoice invoice = invoice(1)
 
         when:
-        def id = addInvoiceAndReturnId(invoiceAsJson)
+        def id = addInvoiceAndReturnId(invoice)
 
         then:
-        addInvoiceAndReturnId(invoiceAsJson) == id + 1
-        addInvoiceAndReturnId(invoiceAsJson) == id + 2
-        addInvoiceAndReturnId(invoiceAsJson) == id + 3
+        addInvoiceAndReturnId(invoice) == id + 1
+        addInvoiceAndReturnId(invoice) == id + 2
+        addInvoiceAndReturnId(invoice) == id + 3
     }
 
     def "get by id returns correct invoice"() {
@@ -72,7 +73,7 @@ class InvoiceControllerTest extends AbstractControllerTest {
 
     def "invoice date can be modified"() {
         given:
-        def id = addInvoiceAndReturnId(invoiceAsJson(10))
+        def id = addInvoiceAndReturnId(invoice(10))
         def updatedInvoice = invoice(123)
         updatedInvoice.id = id
 

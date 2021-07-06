@@ -13,6 +13,8 @@ class TestHelpers {
                 .taxIdentificationNumber("$id")
                 .address("ul. Jesionowa $id/1 80-250 Gdańsk, Polska")
                 .name("Amper $id sp z o. o.")
+                .pensionInsurance(BigDecimal.TEN * BigDecimal.valueOf(id))
+                .healthInsurance(BigDecimal.valueOf(100) * BigDecimal.valueOf(id))
                 .build()
     }
 
@@ -21,7 +23,7 @@ class TestHelpers {
         InvoiceEntry.builder()
                 .description("Ozonowanie $id")
                 .quantity(1)
-                .price(BigDecimal.valueOf(id * 1000))
+                .netPrice(BigDecimal.valueOf(id * 1000))
                 .vatValue(BigDecimal.valueOf(id * 1000 * 0.08))
                 .vatRate(Vat.VAT_8)
                 .build()

@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
+import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.service.TaxCalculatorResult
 import pl.futurecollars.invoicing.utils.JsonService
@@ -34,11 +35,11 @@ class AbstractControllerTest extends Specification {
     protected static final String ENDPOINT = "/invoices"
     protected static final String TAX_CALCULATOR_ENDPOINT = "/tax"
 
-    int addInvoiceAndReturnId(String invoiceAsJson) {
+    int addInvoiceAndReturnId(Invoice invoice) {
         Integer.valueOf(
                 mockMvc.perform(
                         post(ENDPOINT)
-                                .content(invoiceAsJson)
+                                .content(jsonService.toJsonObject(invoice))
                                 .contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status()
                                 .isOk())
@@ -66,7 +67,7 @@ class AbstractControllerTest extends Specification {
     protected List<Invoice> addUniqueInvoices(int count) {
         (1..count).collect { id ->
             def invoice = invoice(id)
-            invoice.id = addInvoiceAndReturnId(jsonService.toJsonObject(invoice))
+            invoice.id = addInvoiceAndReturnId(invoice)
 
             return invoice
         }
@@ -86,8 +87,8 @@ class AbstractControllerTest extends Specification {
         jsonService.toJsonObject(invoice(id))
     }
 
-    protected TaxCalculatorResult calculateTax(String taxIdentificationNumber) {
-        def result = mockMvc.perform(get("$TAX_CALCULATOR_ENDPOINT/$taxIdentificationNumber"))
+    protected TaxCalculatorResult calculateTax(Company company) {
+        def result = mockMvc.perform(post("$TAX_CALCULATOR_ENDPOINT").content(jsonService.toJsonObject(company)).contentType(MediaType.APPLICATION_JSON))
                 .andExpect((status().isOk()))
                 .andReturn()
                 .response
