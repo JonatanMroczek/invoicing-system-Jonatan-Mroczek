@@ -30,5 +30,4 @@ public class Company {
     @ApiModelProperty(value = "Health insurance amount", required = true, example = "458.34")
     private BigDecimal pensionInsurance = BigDecimal.ZERO;
 
-
 }
