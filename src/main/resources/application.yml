@@ -1,13 +1,8 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/invoicing
-    username: postgres
-    password: admin
-    driver-class-name: org.postgresql.Driver
+  profiles:
+    active: memory
   flyway:
     enabled: false
-  main:
-    allow-bean-definition-overriding: true
 
 invoicing-system:
   database: file

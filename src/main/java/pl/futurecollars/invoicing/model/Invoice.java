@@ -26,7 +26,7 @@ public class Invoice {
     @ApiModelProperty(value = "Company who is selling the product/service", required = true)
     private Company seller;
 
-    @ApiModelProperty(value = "Invoice number (assigned by user)")
+    @ApiModelProperty(value = "Invoice number (assigned by user)", required = true, example = "2020/03/08/0000001")
     private String number;
 
     @ApiModelProperty(value = "List of products/services", required = true)

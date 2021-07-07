@@ -52,6 +52,7 @@ dependencies {
     implementation "io.springfox:springfox-swagger-ui:${springFoxUiVersion}"
 
     runtimeOnly 'org.postgresql:postgresql:42.2.19'
+    runtimeOnly 'com.h2database:h2:1.4.200'
 
 
     testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
@@ -116,3 +117,18 @@ jacocoTestReport {
         }))
     }
 }
+task testWithFileDatabase(type: Test) {
+    systemProperty 'spring.profiles.active', 'file'
+}
+
+task testWithMemoryDatabase(type: Test) {
+    systemProperty 'spring.profiles.active', 'memory'
+}
+
+task testWithSqlDatabase(type: Test) {
+    systemProperty 'spring.profiles.active', 'sql'
+}
+
+check.dependsOn testWithFileDatabase
+check.dependsOn testWithMemoryDatabase
+//check.dependsOn testWithSqlDatabase
