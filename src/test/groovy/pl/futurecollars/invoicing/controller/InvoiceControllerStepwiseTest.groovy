@@ -62,7 +62,7 @@ class InvoiceControllerStepwiseTest extends Specification {
                 .response
                 .contentAsString
         then:
-        response == "1"
+        response > 0
     }
 
     def "one invoice is returned when getting all invoices"() {
