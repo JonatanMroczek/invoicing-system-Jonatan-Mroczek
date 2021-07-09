@@ -47,3 +47,6 @@ jobs:
         with:
           name: reports
           path: build/reports/**
+
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v2
