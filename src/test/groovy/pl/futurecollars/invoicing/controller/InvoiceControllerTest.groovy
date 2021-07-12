@@ -42,7 +42,7 @@ class InvoiceControllerTest extends AbstractControllerTest {
         def invoices = getAllInvoices()
 
         then:
-        invoices == expectedInvoices
+        invoices.sort { it.id } == expectedInvoices
     }
 
     def "add invoice returns sequential id"() {
