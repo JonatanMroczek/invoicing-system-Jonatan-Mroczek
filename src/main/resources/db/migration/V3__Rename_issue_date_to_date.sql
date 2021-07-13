@@ -1,2 +1,2 @@
-Alter TABLE public.invoices
+Alter TABLE public.invoice
     RENAME issue_date TO date;

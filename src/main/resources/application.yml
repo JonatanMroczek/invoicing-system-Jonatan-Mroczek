@@ -5,7 +5,7 @@ spring:
     enabled: false
 
 invoicing-system:
-  database: file
+  database: memory
   database.directory: db
   database.invoices.file: invoices.txt
   database.id.file: id.txt
