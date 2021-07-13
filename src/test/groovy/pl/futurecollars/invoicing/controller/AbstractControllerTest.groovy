@@ -60,7 +60,7 @@ class AbstractControllerTest extends Specification {
                 .response
                 .contentAsString
 
-        return jsonService.toJavaObject(response, Invoice[])
+       jsonService.toJavaObject(response, Invoice[])
     }
 
 

@@ -1,6 +1,8 @@
 spring:
-  main:
-    allow-bean-definition-overriding: true
+  profiles:
+    active: memory
+  flyway:
+    enabled: false
 
 invoicing-system:
   database: file
