@@ -1,4 +1,4 @@
-CREATE TABLE public.invoices
+CREATE TABLE public.invoice
 (
     id         bigserial             NOT NULL,
     issue_date date                  NOT NULL,
