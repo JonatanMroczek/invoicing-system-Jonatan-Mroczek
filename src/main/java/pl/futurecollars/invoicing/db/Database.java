@@ -27,5 +27,8 @@ public interface Database {
             .map(invoiceEntriesToSum)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+    default void reset() {
+        getAll().forEach(invoice -> delete(invoice.getId()));
+    }
 
 }

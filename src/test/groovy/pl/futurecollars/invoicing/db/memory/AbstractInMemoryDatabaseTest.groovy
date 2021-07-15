@@ -10,14 +10,17 @@ abstract class AbstractInMemoryDatabaseTest extends Specification {
 
 
     List<Invoice> invoices = (1..12).collect { invoice(it) }
-    Database database = getDatabaseInstance()
 
     abstract Database getDatabaseInstance()
 
 
+
     def "should save invoices returning sequential id, invoice should have id set to correct value, get by id returns saved invoice"() {
+        given:
+        Database database = getDatabaseInstance()
+
         when:
-        def ids = invoices.collect({ database.save(it) })
+        def ids = invoices.collect{it.id database.save(it) }
 
         then:
         ids == (1..invoices.size()).collect()
