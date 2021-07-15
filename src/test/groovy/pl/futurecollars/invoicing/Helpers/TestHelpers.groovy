@@ -8,7 +8,7 @@ import pl.futurecollars.invoicing.model.Vat
 import java.time.LocalDate
 
 class TestHelpers {
-    static company(int id) {
+    static company(long id) {
         Company.builder()
                 .taxIdentificationNumber("$id")
                 .address("ul. Jesionowa $id/1 80-250 Gdańsk, Polska")
@@ -18,11 +18,11 @@ class TestHelpers {
                 .build()
     }
 
-    static product(int id) {
+    static product(long id) {
 
         InvoiceEntry.builder()
                 .description("Ozonowanie $id")
-                .quantity(1)
+                .quantity(BigDecimal.valueOf(1).setScale(2))
                 .netPrice(BigDecimal.valueOf(id * 1000).setScale(2))
                 .vatValue(BigDecimal.valueOf(id * 1000 * 0.08).setScale(2))
                 .vatRate(Vat.VAT_8)
@@ -30,9 +30,10 @@ class TestHelpers {
 
     }
 
-    static invoice(int id) {
+    static invoice(long id) {
         Invoice.builder()
                 .date(LocalDate.now())
+                .number("123/4242/43221/$id")
                 .buyer(company(id + 10))
                 .seller(company(id))
                 .entries((1..id).collect({ product(it) }))

@@ -1,2 +1,2 @@
-ALTER TABLE public.invoices
-    ADD CONSTRAINT unique_invoice_number UNIQUE ("number");
+ALTER TABLE public.invoice
+    ADD CONSTRAINT unique_invoice_number UNIQUE (number);

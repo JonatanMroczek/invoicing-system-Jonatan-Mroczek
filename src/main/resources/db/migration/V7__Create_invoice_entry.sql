@@ -7,7 +7,7 @@ CREATE TABLE public.invoice_entry
     net_price numeric (10, 2) NOT NULL,
     vat_value numeric (10, 2) NOT NULL,
     vat_rate bigint NOT NULL,
-    car_expenses bigint,
+    expense_related_to_car bigint,
     PRIMARY KEY (id)
 );
 
@@ -16,8 +16,6 @@ ALTER TABLE public.invoice_entry
         REFERENCES public.vat (id);
 
 ALTER TABLE public.invoice_entry
-    ADD CONSTRAINT car_fk FOREIGN KEY (car_expenses)
+    ADD CONSTRAINT car_fk FOREIGN KEY (expense_related_to_car)
         REFERENCES public.car (id);
 
-ALTER TABLE public.invoice_entry
-    OWNER to postgres;

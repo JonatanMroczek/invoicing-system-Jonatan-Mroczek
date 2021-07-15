@@ -13,14 +13,15 @@ public class InMemoryDatabase implements Database {
     private int index = 1;
 
     @Override
-    public int save(Invoice invoice) {
+    public long save(Invoice invoice) {
         invoice.setId(index);
         invoices.put(index, invoice);
         return index++;
     }
 
     @Override
-    public Optional<Invoice> getById(int id) {
+    public Optional<Invoice> getById(long id) {
+
         return Optional.ofNullable(invoices.get(id));
     }
 
@@ -31,14 +32,14 @@ public class InMemoryDatabase implements Database {
     }
 
     @Override
-    public Optional<Invoice> update(int id, Invoice updatedInvoice) {
+    public Optional<Invoice> update(long id, Invoice updatedInvoice) {
         updatedInvoice.setId(id);
-        return Optional.ofNullable(invoices.put(id, updatedInvoice));
+        return Optional.ofNullable(invoices.put((int) id, updatedInvoice));
 
     }
 
     @Override
-    public Optional<Invoice> delete(int id) {
+    public Optional<Invoice> delete(long id) {
         return Optional.ofNullable(invoices.remove(id));
 
     }

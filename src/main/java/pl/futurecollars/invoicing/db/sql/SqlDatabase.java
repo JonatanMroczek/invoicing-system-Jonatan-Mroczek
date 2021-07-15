@@ -3,6 +3,7 @@ package pl.futurecollars.invoicing.db.sql;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,7 +18,7 @@ public class SqlDatabase implements Database {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public int save(Invoice invoice) {
+    public long save(Invoice invoice) {
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement("insert into company (name, address) values (?, ?);", new String[] {"id"});
@@ -26,7 +27,7 @@ public class SqlDatabase implements Database {
             return ps;
         }, keyHolder);
 
-        long buyerId = keyHolder.getKey().longValue();
+        long buyerId = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement("insert into company (name, address) values (?, ?);", new String[] {"id"});
@@ -56,7 +57,7 @@ public class SqlDatabase implements Database {
                         "insert into invoice_entry (description, quantity, net_price, vat_value, vat_rate) values (?, ?, ?, ?, ?);",
                         new String[] {"id"});
                 ps.setString(1, entry.getDescription());
-                ps.setInt(2, entry.getQuantity());
+                ps.setBigDecimal(2, entry.getQuantity());
                 ps.setBigDecimal(3, entry.getNetPrice());
                 ps.setBigDecimal(4, entry.getVatValue());
                 ps.setInt(5, 1);
@@ -73,11 +74,11 @@ public class SqlDatabase implements Database {
                 return ps;
             });
         });
-        return keyHolder.getKey().intValue();
+        return Objects.requireNonNull(keyHolder.getKey()).intValue();
     }
 
     @Override
-    public Optional<Invoice> getById(int id) {
+    public Optional<Invoice> getById(long id) {
         return Optional.empty();
     }
 
@@ -96,12 +97,12 @@ public class SqlDatabase implements Database {
     }
 
     @Override
-    public Optional<Invoice> update(int id, Invoice updatedInvoice) {
+    public Optional<Invoice> update(long id, Invoice updatedInvoice) {
         return Optional.empty();
     }
 
     @Override
-    public Optional<Invoice> delete(int id) {
+    public Optional<Invoice> delete(long id) {
         return Optional.empty();
     }
 

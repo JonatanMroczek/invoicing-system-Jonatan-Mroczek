@@ -1,8 +1,8 @@
 spring:
   profiles:
-    active: jpa
+    active: jpa-flyway
   flyway:
-    enabled: false
+    enabled: true
 
 invoicing-system:
   database: jpa

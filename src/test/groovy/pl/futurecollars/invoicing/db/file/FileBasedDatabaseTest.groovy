@@ -1,8 +1,8 @@
 package pl.futurecollars.invoicing.db.file
 
 import pl.futurecollars.invoicing.Helpers.TestHelpers
+import pl.futurecollars.invoicing.db.AbstractInMemoryDatabaseTest
 import pl.futurecollars.invoicing.db.Database
-import pl.futurecollars.invoicing.db.memory.AbstractInMemoryDatabaseTest
 import pl.futurecollars.invoicing.utils.FilesService
 import pl.futurecollars.invoicing.utils.JsonService
 
