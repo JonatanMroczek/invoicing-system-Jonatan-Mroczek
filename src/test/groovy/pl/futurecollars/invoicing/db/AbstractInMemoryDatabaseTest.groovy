@@ -26,10 +26,10 @@ abstract class AbstractInMemoryDatabaseTest extends Specification {
 
         then:
         ids == (1L..invoices.size()).collect()
-        ids.forEach({ assert database.getById(it).isPresent() })
-        ids.forEach({ assert database.getById(it).get().getId() == it })
+        ids.forEach { assert database.getById(it).isPresent() }
+        ids.forEach { assert database.getById(it).get().getId() == it }
         ids.forEach {
-            def expectedInvoice = resetIds(invoices.get((long) it - 1))
+            def expectedInvoice = resetIds(invoices.get((int) it - 1))
             def invoiceFromDb = resetIds(database.getById(it).get())
             assert invoiceFromDb.toString() == expectedInvoice.toString()
         }
@@ -79,11 +79,10 @@ abstract class AbstractInMemoryDatabaseTest extends Specification {
 
     def "can delete all invoices"() {
         given:
-        invoices.forEach({ database.save(it) })
+        invoices.forEach { it.id = database.save(it) }
 
         when:
-        invoices.forEach({ database.delete(it.getId()) })
-
+        invoices.forEach { database.delete(it.getId()) }
         then:
         database.getAll().isEmpty()
     }
@@ -123,6 +122,7 @@ abstract class AbstractInMemoryDatabaseTest extends Specification {
 
     }
 
+    // resetting is necessary because database query returns ids while we don't know ids in original invoice
     private static Invoice resetIds(Invoice invoice) {
         invoice.getBuyer().id = null
         invoice.getSeller().id = null
@@ -131,6 +131,7 @@ abstract class AbstractInMemoryDatabaseTest extends Specification {
         }
         invoice
     }
+
 }
 
 

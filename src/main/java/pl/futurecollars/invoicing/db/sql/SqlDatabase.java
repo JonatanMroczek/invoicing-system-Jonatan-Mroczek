@@ -89,7 +89,7 @@ public class SqlDatabase implements Database {
             + "inner join company c2 on i.buyer = c2.id", (rs, rowNr) ->
             Invoice.builder()
                 .date(rs.getDate("date").toLocalDate())
-                .id(rs.getInt("id"))
+                .id(rs.getLong("id"))
                 .number(rs.getString("number"))
                 .buyer(Company.builder().name(rs.getString("buyer_name")).build())
                 .seller(Company.builder().name(rs.getString("seller_name")).build())
