@@ -23,7 +23,6 @@ public class FileBasedDatabase implements Database {
     public long save(Invoice invoice) {
         invoice.setId(idService.getNextIdAndIncrement());
         try {
-
             filesService.appendLineToFile(databasePath, jsonService.toJsonObject(invoice));
             return invoice.getId();
         } catch (IOException ex) {
@@ -37,7 +36,7 @@ public class FileBasedDatabase implements Database {
         try {
             return filesService.readAllLines(databasePath)
                 .stream()
-                .filter(line -> containsId(line, (int) id))
+                .filter(line -> containsId(line, id))
                 .map(line -> jsonService.toJavaObject(line, Invoice.class))
                 .findFirst();
         } catch (IOException ex) {
@@ -66,7 +65,7 @@ public class FileBasedDatabase implements Database {
             List<String> allInvoices = filesService.readAllLines(databasePath);
             var listWithoutInvoiceWithGivenId = allInvoices
                 .stream()
-                .filter(line -> !containsId(line, (int) id))
+                .filter(line -> !containsId(line, id))
                 .collect(Collectors.toList());
 
             updatedInvoice.setId(id);
@@ -93,7 +92,7 @@ public class FileBasedDatabase implements Database {
 
             var updatedList = allInvoices
                 .stream()
-                .filter(line -> !containsId(line, (int) id))
+                .filter(line -> !containsId(line, id))
                 .collect(Collectors.toList());
 
             filesService.writeLinesToFile(databasePath, updatedList);
@@ -107,8 +106,8 @@ public class FileBasedDatabase implements Database {
         }
     }
 
-    private boolean containsId(String line, int id) {
-        return line.contains("{\"id\":" + id + ",\"date\"");
+    private boolean containsId(String line, long id) {
+        return line.contains("{\"id\":" + id + ",\"number\"");
     }
 
 }
