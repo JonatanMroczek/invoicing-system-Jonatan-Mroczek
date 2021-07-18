@@ -1,12 +1,10 @@
 package pl.futurecollars.invoicing.controller.tax
 
-
 import pl.futurecollars.invoicing.controller.AbstractControllerTest
-import pl.futurecollars.invoicing.model.Car
-import pl.futurecollars.invoicing.model.Company
-import pl.futurecollars.invoicing.model.Invoice
-import pl.futurecollars.invoicing.model.InvoiceEntry
+import pl.futurecollars.invoicing.model.*
 import spock.lang.Unroll
+
+import java.time.LocalDate
 
 import static pl.futurecollars.invoicing.Helpers.TestHelpers.company
 
@@ -93,15 +91,21 @@ class TaxCalculatorControllerTest extends AbstractControllerTest {
     def "tax is calculated correctly when car is used for personal purposes"() {
         given:
         def invoice = Invoice.builder()
+                .date(LocalDate.now())
+                .number("12/2225")
                 .seller(company(1))
                 .buyer(company(2))
                 .entries(List.of(
                         InvoiceEntry.builder()
                                 .vatValue(BigDecimal.valueOf(23.45))
+                                .vatRate(Vat.VAT_8)
                                 .netPrice(BigDecimal.valueOf(100))
+                                .description("description")
+                                .quantity(BigDecimal.ONE)
                                 .carExpenses(
                                         Car.builder()
                                                 .personalUse(true)
+                                                .registrationNumber("KTA 5568Y")
                                                 .build()
                                 )
                                 .build()
@@ -137,15 +141,23 @@ class TaxCalculatorControllerTest extends AbstractControllerTest {
         given:
         def ourCompany = Company.builder()
                 .taxIdentificationNumber("1234")
+                .address("address")
+                .name("name")
                 .pensionInsurance(BigDecimal.valueOf(514.57))
                 .healthInsurance(319.94)
                 .build()
 
         def invoiceWithIncome = Invoice.builder()
                 .seller(ourCompany)
+                .date(LocalDate.now())
+                .number("number")
                 .buyer(company(2))
                 .entries(List.of(
                         InvoiceEntry.builder()
+                                .vatRate(Vat.VAT_8)
+                                .vatValue(0.0)
+                                .quantity(BigDecimal.ONE)
+                                .description("description")
                                 .netPrice(76011.62)
                                 .build()
                 ))
@@ -153,9 +165,15 @@ class TaxCalculatorControllerTest extends AbstractControllerTest {
 
         def invoiceWithCosts = Invoice.builder()
                 .seller(company(4))
+                .date(LocalDate.now())
+                .number("numbers")
                 .buyer(ourCompany)
                 .entries(List.of(
                         InvoiceEntry.builder()
+                                .vatRate(Vat.VAT_8)
+                                .vatValue(0.0)
+                                .quantity(BigDecimal.ONE)
+                                .description("description")
                                 .netPrice(11329.47)
                                 .build()
                 ))

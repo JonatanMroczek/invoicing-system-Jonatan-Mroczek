@@ -47,7 +47,7 @@ class InvoiceControllerTest extends AbstractControllerTest {
 
     def "add invoice returns sequential id"() {
         given:
-        def Invoice invoice = invoice(1)
+        def Invoice invoice = invoice(2)
 
         when:
         def id = addInvoiceAndReturnId(invoice)

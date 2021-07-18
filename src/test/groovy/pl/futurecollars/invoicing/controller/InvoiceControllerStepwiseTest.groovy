@@ -55,7 +55,7 @@ class InvoiceControllerStepwiseTest extends Specification {
         def invoiceAsJson = jsonService.toJsonObject(originalInvoice)
 
         when:
-         def response = Integer.valueOf(mockMvc.perform(post(ENDPOINT).content(invoiceAsJson).contentType(MediaType.APPLICATION_JSON))
+        def response = Integer.valueOf(mockMvc.perform(post(ENDPOINT).content(invoiceAsJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andReturn()

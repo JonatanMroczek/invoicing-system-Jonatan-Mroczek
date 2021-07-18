@@ -25,11 +25,10 @@ class InvoiceServiceIntegrationTest extends Specification {
         def ids = invoices.collect { service.save(it) }
 
         then:
-        ids == (1..invoices.size()).collect()
-        ids.collect({ assert service.getById(it).isPresent() })
-        ids.collect({ assert service.getById(it).get().getId() == it })
-        ids.collect({ assert service.getById(it).get() == invoices.get(it - 1) })
-
+        ids == (1L..invoices.size()).collect()
+        ids.forEach { assert service.getById(it).isPresent() }
+        ids.forEach { assert service.getById(it).get().getId() == it }
+        ids.forEach { assert service.getById(it).get() == invoices.get((int) it - 1) }
     }
 
     def "should throw exception when saving invoice"() {
@@ -55,7 +54,7 @@ class InvoiceServiceIntegrationTest extends Specification {
 
         expect:
         service.getAll().size() == invoices.size()
-        service.getAll().collect({ assert it == invoices.get(it.getId() - 1) })
+        service.getAll().collect({ assert it == invoices.get((int) it.getId() - 1) })
 
 
     }
@@ -88,7 +87,7 @@ class InvoiceServiceIntegrationTest extends Specification {
 
     def "it's possible to update the invoice"() {
         given:
-        int id = service.save(invoices.get(0))
+        long id = service.save(invoices.get(0))
 
         when:
         service.update(id, invoices.get(1))

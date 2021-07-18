@@ -1,11 +1,11 @@
 spring:
   profiles:
-    active: memory
+    active: jpa-flyway
   flyway:
-    enabled: false
+    enabled: true
 
 invoicing-system:
-  database: file
+  database: jpa
   database.directory: db
   database.invoices.file: invoices.txt
   database.id.file: id.txt

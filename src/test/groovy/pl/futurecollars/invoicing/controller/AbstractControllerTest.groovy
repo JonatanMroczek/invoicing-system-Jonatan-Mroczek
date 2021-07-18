@@ -47,7 +47,7 @@ class AbstractControllerTest extends Specification {
                         .response.contentAsString)
     }
 
-    protected ResultActions deleteInvoice(int id) {
+    protected ResultActions deleteInvoice(long id) {
         mockMvc.perform(delete("$ENDPOINT/$id"))
                 .andExpect(status().isNoContent())
 
@@ -73,7 +73,7 @@ class AbstractControllerTest extends Specification {
         }
     }
 
-    protected Invoice getInvoiceById(int id) {
+    protected Invoice getInvoiceById(long id) {
         def invoiceAsString = mockMvc.perform(get("$ENDPOINT/$id")).andExpect(status().isOk())
                 .andReturn()
                 .response
@@ -83,7 +83,7 @@ class AbstractControllerTest extends Specification {
     }
 
 
-    protected String invoiceAsJson(int id) {
+    protected String invoiceAsJson(long id) {
         jsonService.toJsonObject(invoice(id))
     }
 
@@ -94,6 +94,6 @@ class AbstractControllerTest extends Specification {
                 .response
                 .contentAsString
 
-        jsonService.toJavaObject(result, TaxCalculatorResult);
+        jsonService.toJavaObject(result, TaxCalculatorResult)
     }
 }
