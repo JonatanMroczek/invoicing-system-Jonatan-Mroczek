@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import pl.futurecollars.invoicing.Helpers.TestHelpers
+import pl.futurecollars.invoicing.db.Database
 import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.utils.JsonService
 import spock.lang.Specification
@@ -16,6 +17,7 @@ import java.time.LocalDate
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import static pl.futurecollars.invoicing.Helpers.TestHelpers.resetIds
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -29,12 +31,26 @@ class InvoiceControllerStepwiseTest extends Specification {
     @Autowired
     private JsonService jsonService
 
+    @Autowired
+    private Database<Invoice> database
+
     private static final String ENDPOINT = "/invoices"
 
 
     private Invoice originalInvoice = TestHelpers.invoice(1)
 
     private LocalDate updatedDate = LocalDate.of(2020, 02, 28)
+
+    def "database is reset to ensure clean state"() {
+        expect:
+        database != null
+
+        when:
+        database.reset()
+
+        then:
+        database.getAll().size() == 0
+    }
 
     def "get all invoices returns empty array when no invoices added"() {
 
@@ -82,8 +98,8 @@ class InvoiceControllerStepwiseTest extends Specification {
 
         then:
         invoices.size() == 1
-        invoices[0].toString() == expectedInvoice.toString()
-        invoices[0] == originalInvoice
+        resetIds(invoices[0]) == resetIds(expectedInvoice)
+
     }
 
     def "invoice is returned correctly when getting by id"() {

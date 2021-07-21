@@ -4,4 +4,6 @@ public interface WithId {
 
     Long getId();
 
+    void setId(Long id);
+
 }

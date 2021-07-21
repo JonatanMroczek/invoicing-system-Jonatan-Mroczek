@@ -17,7 +17,7 @@ import pl.futurecollars.invoicing.model.InvoiceEntry;
 @AllArgsConstructor
 public class TaxCalculatorService {
 
-    private final Database <Invoice> database;
+    private final Database<Invoice> database;
 
     public BigDecimal income(String taxIdentificationNumber) {
         return visit(InvoiceEntry::getNetPrice, sellerPredicate(taxIdentificationNumber));
@@ -96,6 +96,7 @@ public class TaxCalculatorService {
     private Predicate<Invoice> buyerPredicate(String taxIdentificationNumber) {
         return invoice -> invoice.getBuyer().getTaxIdentificationNumber().equals(taxIdentificationNumber);
     }
+
     private BigDecimal visit(Function<InvoiceEntry, BigDecimal> invoiceEntriesToSum, Predicate<Invoice> invoicePredicate) {
         return database.getAll().stream()
             .filter(invoicePredicate)

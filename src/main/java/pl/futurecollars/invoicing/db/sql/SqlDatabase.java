@@ -13,7 +13,7 @@ import pl.futurecollars.invoicing.model.Company;
 import pl.futurecollars.invoicing.model.Invoice;
 
 @RequiredArgsConstructor
-public class SqlDatabase implements Database <Invoice> {
+public class SqlDatabase implements Database<Invoice> {
 
     private final JdbcTemplate jdbcTemplate;
 

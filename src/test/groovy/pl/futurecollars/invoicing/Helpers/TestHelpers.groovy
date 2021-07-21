@@ -1,33 +1,35 @@
 package pl.futurecollars.invoicing.Helpers
 
-import pl.futurecollars.invoicing.model.Company
-import pl.futurecollars.invoicing.model.Invoice
-import pl.futurecollars.invoicing.model.InvoiceEntry
-import pl.futurecollars.invoicing.model.Vat
+import pl.futurecollars.invoicing.model.*
 
 import java.time.LocalDate
 
 class TestHelpers {
+
     static company(long id) {
         Company.builder()
                 .taxIdentificationNumber("$id")
-                .address("ul. Jesionowa $id/1 80-250 Gdańsk, Polska")
-                .name("Amper $id sp z o. o.")
-                .pensionInsurance(BigDecimal.TEN * BigDecimal.valueOf(id).setScale(2))
-                .healthInsurance(BigDecimal.valueOf(100) * BigDecimal.valueOf(id).setScale(2))
+                .address("ul. Bukowińska 24d/$id 02-703 Warszawa, Polska")
+                .name("iCode Trust $id Sp. z o.o")
+                .pensionInsurance((BigDecimal.TEN * BigDecimal.valueOf(id)).setScale(2))
+                .healthInsurance((BigDecimal.valueOf(100) * BigDecimal.valueOf(id)).setScale(2))
                 .build()
     }
 
     static product(long id) {
-
         InvoiceEntry.builder()
-                .description("Ozonowanie $id")
-                .quantity(BigDecimal.valueOf(1).setScale(2))
+                .description("Programming course $id")
+                .quantity(1.52)
                 .netPrice(BigDecimal.valueOf(id * 1000).setScale(2))
                 .vatValue(BigDecimal.valueOf(id * 1000 * 0.08).setScale(2))
                 .vatRate(Vat.VAT_8)
+                .carExpenses(id % 2 == 0 ? null :
+                        Car.builder()
+                                .registrationNumber("XYZ")
+                                .personalUse(false)
+                                .build()
+                )
                 .build()
-
     }
 
     static invoice(long id) {
@@ -40,5 +42,19 @@ class TestHelpers {
                 .build()
     }
 
-}
+    // resetting is necessary because database query returns ids while we don't know ids in original invoice
+    static Invoice resetIds(Invoice invoice) {
+        invoice.getBuyer().id = null
+        invoice.getSeller().id = null
+        invoice.entries.forEach {
+            it.id = null
+            it.carExpenses?.id = null
+        }
+        invoice
+    }
 
+    static List<Invoice> resetIds(List<Invoice> invoices) {
+        invoices.forEach { invoice -> resetIds(invoice) }
+    }
+
+}
