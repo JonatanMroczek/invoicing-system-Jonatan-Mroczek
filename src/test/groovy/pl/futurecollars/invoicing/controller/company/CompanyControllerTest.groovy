@@ -1,19 +1,17 @@
 package pl.futurecollars.invoicing.controller.company
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import pl.futurecollars.invoicing.controller.AbstractControllerTest
 import pl.futurecollars.invoicing.model.Company
 import spock.lang.Unroll
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static pl.futurecollars.invoicing.Helpers.TestHelpers.company
 
-@SpringBootTest
-@AutoConfigureMockMvc
 @Unroll
 class CompanyControllerTest extends AbstractControllerTest {
 
@@ -75,6 +73,24 @@ class CompanyControllerTest extends AbstractControllerTest {
 
         where:
         id << [-2, 0, 500]
+    }
+    def "company can be modified"() {
+        given:
+        def id = addCompanyAndReturnId(company(4))
+        def updatedCompany = company(1)
+        updatedCompany.id = id
+
+        expect:
+        mockMvc.perform(
+                put("$COMPANY_ENDPOINT/$id")
+                        .content(jsonService.toJsonObject(updatedCompany))
+                        .contentType(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(status().isNoContent())
+
+        def companyFromDbAfterUpdate = getCompanyById(id).toString()
+        def expectedCompany = updatedCompany.toString()
+        companyFromDbAfterUpdate == expectedCompany
     }
 
 

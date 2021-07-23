@@ -5,8 +5,9 @@ import pl.futurecollars.invoicing.model.Invoice
 import spock.lang.Specification
 
 import static pl.futurecollars.invoicing.Helpers.TestHelpers.invoice
+import static pl.futurecollars.invoicing.Helpers.TestHelpers.resetIds
 
-abstract class AbstractInMemoryDatabaseTest extends Specification {
+abstract class AbstractDatabaseTest extends Specification {
 
 
     List<Invoice> invoices = (1..12).collect { invoice(it) }
@@ -122,14 +123,6 @@ abstract class AbstractInMemoryDatabaseTest extends Specification {
 
     }
 
-    private static Invoice resetIds(Invoice invoice) {
-        invoice.getBuyer().id = null
-        invoice.getSeller().id = null
-        invoice.entries.forEach {
-            it.id = null
-        }
-        invoice
-    }
 
 }
 

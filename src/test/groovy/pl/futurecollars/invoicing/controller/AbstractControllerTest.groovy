@@ -20,7 +20,6 @@ import static pl.futurecollars.invoicing.Helpers.TestHelpers.invoice
 @SpringBootTest
 @AutoConfigureMockMvc
 @Unroll
-
 class AbstractControllerTest extends Specification {
 
     static final String INVOICE_ENDPOINT = "/invoices"

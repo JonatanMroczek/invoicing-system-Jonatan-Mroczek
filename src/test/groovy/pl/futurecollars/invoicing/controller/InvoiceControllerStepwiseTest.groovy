@@ -9,6 +9,7 @@ import pl.futurecollars.invoicing.Helpers.TestHelpers
 import pl.futurecollars.invoicing.db.Database
 import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.utils.JsonService
+import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
 
@@ -33,6 +34,9 @@ class InvoiceControllerStepwiseTest extends Specification {
 
     @Autowired
     private Database<Invoice> database
+
+    @Shared
+    private int invoiceId
 
     private static final String ENDPOINT = "/invoices"
 
@@ -66,26 +70,24 @@ class InvoiceControllerStepwiseTest extends Specification {
 
     def "can add an invoice"() {
 
-        given:
-        def originalInvoice = TestHelpers.invoice(1)
         def invoiceAsJson = jsonService.toJsonObject(originalInvoice)
 
         when:
-        def response = Integer.valueOf(mockMvc.perform(post(ENDPOINT).content(invoiceAsJson).contentType(MediaType.APPLICATION_JSON))
+        invoiceId = Integer.valueOf(mockMvc.perform(post(ENDPOINT).content(invoiceAsJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andReturn()
                 .response
                 .contentAsString)
         then:
-        response > 0
+        invoiceId > 0
     }
 
     def "one invoice is returned when getting all invoices"() {
 
         given:
         def expectedInvoice = originalInvoice
-        expectedInvoice.id = 1
+        expectedInvoice.id = invoiceId
 
         when:
         def response = mockMvc.perform(get(ENDPOINT))
@@ -106,19 +108,19 @@ class InvoiceControllerStepwiseTest extends Specification {
 
         given:
         def expectedInvoice = originalInvoice
-        expectedInvoice.id = 1
+        expectedInvoice.id = invoiceId
 
         when:
-        def response = mockMvc.perform(get("$ENDPOINT/1"))
+        def response = mockMvc.perform(get("$ENDPOINT/$invoiceId"))
                 .andExpect((status().isOk()))
                 .andReturn()
                 .response
                 .contentAsString
 
-        def invoices = jsonService.toJavaObject(response, Invoice)
+        def invoice = jsonService.toJavaObject(response, Invoice)
 
         then:
-        invoices == expectedInvoice
+        resetIds(invoice) == resetIds(expectedInvoice)
 
     }
 
@@ -131,7 +133,7 @@ class InvoiceControllerStepwiseTest extends Specification {
         def invoiceAsJson = jsonService.toJsonObject(modifiedInvoice)
 
         expect:
-        mockMvc.perform(put("$ENDPOINT/1").content(invoiceAsJson).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(put("$ENDPOINT/$invoiceId").content(invoiceAsJson).contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent())
     }
@@ -140,32 +142,32 @@ class InvoiceControllerStepwiseTest extends Specification {
 
         given:
         def expectedInvoice = originalInvoice
-        expectedInvoice.id = 1
+        expectedInvoice.id = invoiceId
         expectedInvoice.date = updatedDate
 
         when:
-        def response = mockMvc.perform(get("$ENDPOINT/1"))
+        def response = mockMvc.perform(get("$ENDPOINT/$invoiceId"))
                 .andExpect(status().isOk())
                 .andReturn()
                 .response
                 .contentAsString
 
-        def invoices = jsonService.toJavaObject(response, Invoice)
+        def invoice = jsonService.toJavaObject(response, Invoice)
 
         then:
-        invoices == expectedInvoice
+        resetIds(invoice) == resetIds(expectedInvoice)
     }
 
     def "can delete invoice"() {
 
         expect:
-        mockMvc.perform(delete("$ENDPOINT/1")).andExpect(status().isNoContent())
+        mockMvc.perform(delete("$ENDPOINT/$invoiceId")).andExpect(status().isNoContent())
 
         and:
-        mockMvc.perform(delete("$ENDPOINT/1")).andExpect(status().isNotFound())
+        mockMvc.perform(delete("$ENDPOINT/$invoiceId")).andExpect(status().isNotFound())
 
         and:
-        mockMvc.perform(get("/$ENDPOINT/1")).andExpect(status().isNotFound())
+        mockMvc.perform(get("/$ENDPOINT/$invoiceId")).andExpect(status().isNotFound())
     }
 
 }
