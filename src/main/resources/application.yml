@@ -3,12 +3,12 @@ server:
 
 spring:
   profiles:
-    active: jpa
+    active: memory
   flyway:
     enabled: true
 
 invoicing-system:
-  database: jpa
+  database: memory
   database.directory: db
   database.invoices.file: invoices.txt
   database.companies.file: companies.txt
