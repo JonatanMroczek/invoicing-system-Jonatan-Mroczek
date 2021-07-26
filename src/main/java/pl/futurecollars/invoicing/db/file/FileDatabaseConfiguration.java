@@ -3,23 +3,19 @@ package pl.futurecollars.invoicing.db.file;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.JdbcTemplate;
 import pl.futurecollars.invoicing.db.Database;
-import pl.futurecollars.invoicing.db.jpa.InvoiceRepository;
-import pl.futurecollars.invoicing.db.jpa.JpaDatabase;
-import pl.futurecollars.invoicing.db.memory.InMemoryDatabase;
-import pl.futurecollars.invoicing.db.sql.SqlDatabase;
+import pl.futurecollars.invoicing.model.Company;
+import pl.futurecollars.invoicing.model.Invoice;
 import pl.futurecollars.invoicing.utils.FilesService;
 import pl.futurecollars.invoicing.utils.JsonService;
 
 @Configuration
-@Slf4j
-public class DatabaseConfiguration {
+@ConditionalOnProperty(name = "invoicing-system.database", havingValue = "file")
+public class FileDatabaseConfiguration {
 
     @Bean
     public IdService idService(
@@ -30,39 +26,28 @@ public class DatabaseConfiguration {
         return new IdService(idFilePath, filesService);
     }
 
-    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "file")
     @Bean
-    public Database fileBasedDatabase(
+    public Database<Invoice> invoiceFileBasedDatabase(
         IdService idService,
         FilesService filesService,
         JsonService jsonService,
         @Value("${invoicing-system.database.directory}") String databaseDirectory,
         @Value("${invoicing-system.database.invoices.file}") String invoicesFile)
         throws IOException {
-        log.debug("Creating in-file database");
         Path databaseFilePath = Files.createTempFile(databaseDirectory, invoicesFile);
-        return new FileBasedDatabase(databaseFilePath, idService, filesService, jsonService);
+        return new FileBasedDatabase<>(databaseFilePath, idService, filesService, jsonService, Invoice.class);
     }
 
-    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "memory")
     @Bean
-    public Database inMemoryDatabase() {
-        log.debug("Creating in-memory database");
-        return new InMemoryDatabase();
-    }
-
-    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "sql")
-    @Bean
-    public Database sqlDatabase(JdbcTemplate jdbcTemplate) {
-        log.debug("Creating sql database");
-        return new SqlDatabase(jdbcTemplate);
-    }
-
-    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "jpa")
-    @Bean
-    public Database jpa(InvoiceRepository invoiceRepository) {
-        log.debug("Creating jpa database");
-        return new JpaDatabase(invoiceRepository);
+    public Database<Company> companyFileBasedDatabase(
+        IdService idService,
+        FilesService filesService,
+        JsonService jsonService,
+        @Value("${invoicing-system.database.directory}") String databaseDirectory,
+        @Value("${invoicing-system.database.invoices.file}") String invoicesFile)
+        throws IOException {
+        Path databaseFilePath = Files.createTempFile(databaseDirectory, invoicesFile);
+        return new FileBasedDatabase<>(databaseFilePath, idService, filesService, jsonService, Company.class);
     }
 
 }

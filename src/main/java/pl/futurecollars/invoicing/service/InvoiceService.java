@@ -9,9 +9,9 @@ import pl.futurecollars.invoicing.model.Invoice;
 @Service
 public class InvoiceService {
 
-    private final Database db;
+    private final Database<Invoice> db;
 
-    public InvoiceService(Database db) {
+    public InvoiceService(Database<Invoice> db) {
         this.db = db;
     }
 
@@ -29,6 +29,7 @@ public class InvoiceService {
     }
 
     public Optional<Invoice> update(long id, Invoice updatedInvoice) {
+        updatedInvoice.setId(id);
         return db.update(id, updatedInvoice);
 
     }

@@ -5,7 +5,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.ResultActions
 import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.service.TaxCalculatorResult
@@ -15,13 +14,18 @@ import spock.lang.Unroll
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import static pl.futurecollars.invoicing.Helpers.TestHelpers.company
 import static pl.futurecollars.invoicing.Helpers.TestHelpers.invoice
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @Unroll
-
 class AbstractControllerTest extends Specification {
+
+    static final String INVOICE_ENDPOINT = "/invoices"
+    static final String COMPANY_ENDPOINT = "/companies"
+    static final String TAX_CALCULATOR_ENDPOINT = "/tax"
+
     @Autowired
     protected MockMvc mockMvc
 
@@ -30,70 +34,114 @@ class AbstractControllerTest extends Specification {
 
     def setup() {
         getAllInvoices().each { invoice -> deleteInvoice(invoice.id) }
+        getAllCompanies().each { company -> deleteCompany(company.id) }
     }
 
-    protected static final String ENDPOINT = "/invoices"
-    protected static final String TAX_CALCULATOR_ENDPOINT = "/tax"
 
     int addInvoiceAndReturnId(Invoice invoice) {
-        Integer.valueOf(
-                mockMvc.perform(
-                        post(ENDPOINT)
-                                .content(jsonService.toJsonObject(invoice))
-                                .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(status()
-                                .isOk())
-                        .andReturn()
-                        .response.contentAsString)
+        addAndReturnId(invoice, INVOICE_ENDPOINT)
     }
 
-    protected ResultActions deleteInvoice(long id) {
-        mockMvc.perform(delete("$ENDPOINT/$id"))
+    int addCompanyAndReturnId(Company company) {
+        addAndReturnId(company, COMPANY_ENDPOINT)
+    }
+
+    List<Invoice> getAllInvoices() {
+        getAll(Invoice[], INVOICE_ENDPOINT)
+    }
+
+    List<Company> getAllCompanies() {
+        getAll(Company[], COMPANY_ENDPOINT)
+    }
+
+    List<Invoice> addUniqueInvoices(int count) {
+        (1..count).collect { id ->
+            def invoice = invoice(id)
+            invoice.id = addInvoiceAndReturnId(invoice)
+            invoice
+        }
+    }
+
+    List<Company> addUniqueCompanies(int count) {
+        (1..count).collect { id ->
+            def company = company(id)
+            company.id = addCompanyAndReturnId(company)
+            company
+        }
+    }
+
+    void deleteInvoice(long id) {
+        mockMvc.perform(delete("$INVOICE_ENDPOINT/$id"))
                 .andExpect(status().isNoContent())
-
     }
 
-    protected List<Invoice> getAllInvoices() {
-        def response = mockMvc.perform(get("$ENDPOINT"))
+    void deleteCompany(long id) {
+        mockMvc.perform(delete("$COMPANY_ENDPOINT/$id"))
+                .andExpect(status().isNoContent())
+    }
+
+    Invoice getInvoiceById(long id) {
+        getById(id, Invoice, INVOICE_ENDPOINT)
+    }
+
+    Company getCompanyById(long id) {
+        getById(id, Company, COMPANY_ENDPOINT)
+    }
+
+    String invoiceAsJson(long id) {
+        jsonService.toJsonObject(invoice(id))
+    }
+
+    String companyAsJson(long id) {
+        jsonService.toJsonObject(company(id))
+    }
+
+    TaxCalculatorResult calculateTax(Company company) {
+        def response = mockMvc.perform(
+                post("$TAX_CALCULATOR_ENDPOINT")
+                        .content(jsonService.toJsonObject(company))
+                        .contentType(MediaType.APPLICATION_JSON)
+        )
                 .andExpect(status().isOk())
                 .andReturn()
                 .response
                 .contentAsString
 
-        jsonService.toJavaObject(response, Invoice[])
+        jsonService.toJavaObject(response, TaxCalculatorResult)
     }
 
-
-    protected List<Invoice> addUniqueInvoices(int count) {
-        (1..count).collect { id ->
-            def invoice = invoice(id)
-            invoice.id = addInvoiceAndReturnId(invoice)
-
-            return invoice
-        }
+    private <T> int addAndReturnId(T item, String endpoint) {
+        Integer.valueOf(
+                mockMvc.perform(
+                        post(endpoint)
+                                .content(jsonService.toJsonObject(item))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                        .andExpect(status().isOk())
+                        .andReturn()
+                        .response
+                        .contentAsString
+        )
     }
 
-    protected Invoice getInvoiceById(long id) {
-        def invoiceAsString = mockMvc.perform(get("$ENDPOINT/$id")).andExpect(status().isOk())
+    private <T> T getAll(Class<T> clazz, String endpoint) {
+        def response = mockMvc.perform(get(endpoint))
+                .andExpect(status().isOk())
                 .andReturn()
                 .response
                 .contentAsString
 
-        jsonService.toJavaObject(invoiceAsString, Invoice)
+        jsonService.toJavaObject(response, clazz)
     }
 
-
-    protected String invoiceAsJson(long id) {
-        jsonService.toJsonObject(invoice(id))
-    }
-
-    protected TaxCalculatorResult calculateTax(Company company) {
-        def result = mockMvc.perform(post("$TAX_CALCULATOR_ENDPOINT").content(jsonService.toJsonObject(company)).contentType(MediaType.APPLICATION_JSON))
-                .andExpect((status().isOk()))
+    private <T> T getById(long id, Class<T> clazz, String endpoint) {
+        def invoiceAsString = mockMvc.perform(get("$endpoint/$id"))
+                .andExpect(status().isOk())
                 .andReturn()
                 .response
                 .contentAsString
 
-        jsonService.toJavaObject(result, TaxCalculatorResult)
+        jsonService.toJavaObject(invoiceAsString, clazz)
     }
+
 }

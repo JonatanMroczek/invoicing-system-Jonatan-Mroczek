@@ -1,6 +1,9 @@
+server:
+  port: 8080
+
 spring:
   profiles:
-    active: jpa-flyway
+    active: jpa
   flyway:
     enabled: true
 
@@ -8,6 +11,7 @@ invoicing-system:
   database: jpa
   database.directory: db
   database.invoices.file: invoices.txt
+  database.companies.file: companies.txt
   database.id.file: id.txt
 
 logging:

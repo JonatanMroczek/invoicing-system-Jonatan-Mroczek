@@ -1,8 +1,6 @@
 package pl.futurecollars.invoicing.controller
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import pl.futurecollars.invoicing.model.Invoice
@@ -12,9 +10,8 @@ import spock.lang.Unroll
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static pl.futurecollars.invoicing.Helpers.TestHelpers.invoice
+import static pl.futurecollars.invoicing.Helpers.TestHelpers.resetIds
 
-@SpringBootTest
-@AutoConfigureMockMvc
 @Unroll
 class InvoiceControllerTest extends AbstractControllerTest {
 
@@ -33,6 +30,19 @@ class InvoiceControllerTest extends AbstractControllerTest {
 
     }
 
+    def "add invoice returns sequential id"() {
+        given:
+        Invoice invoice = invoice(2)
+
+        when:
+        def id = addInvoiceAndReturnId(invoice)
+
+        then:
+        addInvoiceAndReturnId(invoice) == id + 1
+        addInvoiceAndReturnId(invoice) == id + 2
+        addInvoiceAndReturnId(invoice) == id + 3
+    }
+
     def "all invoices are returned"() {
         given:
         def numberOfInvoices = 3
@@ -42,20 +52,9 @@ class InvoiceControllerTest extends AbstractControllerTest {
         def invoices = getAllInvoices()
 
         then:
-        invoices.sort { it.id } == expectedInvoices
-    }
+        invoices.size() == numberOfInvoices
+        resetIds(invoices).toString() == resetIds(expectedInvoices).toString()
 
-    def "add invoice returns sequential id"() {
-        given:
-        def Invoice invoice = invoice(2)
-
-        when:
-        def id = addInvoiceAndReturnId(invoice)
-
-        then:
-        addInvoiceAndReturnId(invoice) == id + 1
-        addInvoiceAndReturnId(invoice) == id + 2
-        addInvoiceAndReturnId(invoice) == id + 3
     }
 
     def "get by id returns correct invoice"() {
@@ -67,25 +66,9 @@ class InvoiceControllerTest extends AbstractControllerTest {
         def invoice = getInvoiceById(verifiedInvoice.getId())
 
         then:
-        invoice == verifiedInvoice
+        resetIds(invoice) == resetIds(verifiedInvoice)
 
-    }
 
-    def "invoice date can be modified"() {
-        given:
-        def id = addInvoiceAndReturnId(invoice(10))
-        def updatedInvoice = invoice(123)
-        updatedInvoice.id = id
-
-        expect:
-        mockMvc.perform(
-                put("$ENDPOINT/$id")
-                        .content(jsonService.toJsonObject(updatedInvoice))
-                        .contentType(MediaType.APPLICATION_JSON)
-        )
-                .andExpect(status().isNoContent())
-
-        getInvoiceById(id) == updatedInvoice
     }
 
     def "404 is returned when getting not existing invoice"() {
@@ -94,7 +77,7 @@ class InvoiceControllerTest extends AbstractControllerTest {
 
 
         expect:
-        mockMvc.perform(get("$ENDPOINT/$id"))
+        mockMvc.perform(get("$INVOICE_ENDPOINT/$id"))
                 .andExpect(status().isNotFound())
 
         where:
@@ -108,7 +91,7 @@ class InvoiceControllerTest extends AbstractControllerTest {
 
 
         expect:
-        mockMvc.perform(delete("$ENDPOINT/$id"))
+        mockMvc.perform(delete("$INVOICE_ENDPOINT/$id"))
                 .andExpect(status().isNotFound())
 
         where:
@@ -121,7 +104,7 @@ class InvoiceControllerTest extends AbstractControllerTest {
         addUniqueInvoices(10)
 
         expect:
-        mockMvc.perform(put("$ENDPOINT/$id")
+        mockMvc.perform(put("$INVOICE_ENDPOINT/$id")
                 .content(invoiceAsJson(1))
                 .contentType(MediaType.APPLICATION_JSON))
 
@@ -132,7 +115,26 @@ class InvoiceControllerTest extends AbstractControllerTest {
 
     }
 
-    def "can delete invoice"() {
+    def "invoice can be modified"() {
+        given:
+        def id = addInvoiceAndReturnId(invoice(4))
+        def updatedInvoice = invoice(1)
+        updatedInvoice.id = id
+
+        expect:
+        mockMvc.perform(
+                put("$INVOICE_ENDPOINT/$id")
+                        .content(jsonService.toJsonObject(updatedInvoice))
+                        .contentType(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(status().isNoContent())
+
+        def invoiceFromDbAfterUpdate = resetIds(getInvoiceById(id)).toString()
+        def expectedInvoice = resetIds(updatedInvoice).toString()
+        invoiceFromDbAfterUpdate == expectedInvoice
+    }
+
+    def "invoice can be deleted"() {
         given:
         def invoices = addUniqueInvoices(10)
 

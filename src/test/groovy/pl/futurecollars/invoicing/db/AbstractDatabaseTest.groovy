@@ -5,14 +5,15 @@ import pl.futurecollars.invoicing.model.Invoice
 import spock.lang.Specification
 
 import static pl.futurecollars.invoicing.Helpers.TestHelpers.invoice
+import static pl.futurecollars.invoicing.Helpers.TestHelpers.resetIds
 
-abstract class AbstractInMemoryDatabaseTest extends Specification {
+abstract class AbstractDatabaseTest extends Specification {
 
 
     List<Invoice> invoices = (1..12).collect { invoice(it) }
 
-    abstract Database getDatabaseInstance()
-    Database database
+    abstract Database<Invoice> getDatabaseInstance()
+    Database<Invoice> database
 
     def setup() {
         database = getDatabaseInstance()
@@ -122,15 +123,6 @@ abstract class AbstractInMemoryDatabaseTest extends Specification {
 
     }
 
-    // resetting is necessary because database query returns ids while we don't know ids in original invoice
-    private static Invoice resetIds(Invoice invoice) {
-        invoice.getBuyer().id = null
-        invoice.getSeller().id = null
-        invoice.entries.forEach {
-            it.id = null
-        }
-        invoice
-    }
 
 }
 
