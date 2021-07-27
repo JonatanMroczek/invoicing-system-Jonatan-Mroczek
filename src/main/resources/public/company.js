@@ -21,7 +21,7 @@ const loadCompanies = async () => {
         const healthInsuranceCell = row.insertCell(4);
         healthInsuranceCell.innerText = company.healthInsurance;
     })
-
+}
 
 const serializeFormToJson = form => JSON.stringify(
     Array.from(new FormData(form).entries())
@@ -34,18 +34,20 @@ function handleAddCompanyFormSubmit() {
     form.on('submit', function (e) {
         e.preventDefault();
 
-      $.ajax({
-            url: 'companies' ,
-            type: 'post' ,
-            contentType: 'application/json' ,
-            data: serializeFormToJson(this) ,
-            success: function (data)  {
+        $.ajax({
+            url: 'companies',
+            type: 'post',
+            contentType: 'application/json',
+            data: serializeFormToJson(this),
+            success: function (data) {
+                $("#companiesTable").find("tr:gt(0)").remove();
                 loadCompanies()
-          },
-          error: function (jgXhr, textStatus, errorThrown)  {
+            },
+            error: function (jqXhr, textStatus, errorThrown) {
                 alert(errorThrown)
-         }
-      });
+            }
+        });
+    });
 }
 
 window.onload = function () {
