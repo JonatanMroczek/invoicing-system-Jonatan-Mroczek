@@ -95,8 +95,8 @@ jacocoTestCoverageVerification {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude:
-                    ['pl/futurecollars/invoicing/db/sql/*'
-
+                    ['pl/futurecollars/invoicing/db/sql/*',
+                    'pl/futurecollars/invoicing/frontend*'
                     ])
         }))
     }
@@ -106,7 +106,8 @@ jacocoTestReport {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude:
-                    ['pl/futurecollars/invoicing/db/sql/*'
+                    ['pl/futurecollars/invoicing/db/sql/*',
+                     'pl/futurecollars/invoicing/frontend*'
                     ])
         }))
     }
