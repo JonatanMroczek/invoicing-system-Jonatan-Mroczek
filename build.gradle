@@ -80,14 +80,14 @@ jacocoTestCoverageVerification {
         rule {
             limit {
                 counter = 'BRANCH'
-                minimum = 0.8
+                minimum = 0.7
             }
         }
 
         rule {
             limit {
                 counter = 'LINE'
-                minimum = 0.8
+                minimum = 0.7
             }
         }
     }
@@ -95,7 +95,7 @@ jacocoTestCoverageVerification {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude:
-                    ['pl/futurecollars/invoicing/db/sql/SqlDatabase.class',
+                    ['pl/futurecollars/invoicing/db/sql/*'
 
                     ])
         }))
@@ -106,7 +106,7 @@ jacocoTestReport {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude:
-                    ['pl/futurecollars/invoicing/db/sql/SqlDatabase.class'
+                    ['pl/futurecollars/invoicing/db/sql/*'
                     ])
         }))
     }

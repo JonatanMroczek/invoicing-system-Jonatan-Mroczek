@@ -74,6 +74,7 @@ class CompanyControllerTest extends AbstractControllerTest {
         where:
         id << [-2, 0, 500]
     }
+
     def "company can be modified"() {
         given:
         def id = addCompanyAndReturnId(company(4))
