@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: jpa
+    active: sql
   flyway:
     enabled: true
 
