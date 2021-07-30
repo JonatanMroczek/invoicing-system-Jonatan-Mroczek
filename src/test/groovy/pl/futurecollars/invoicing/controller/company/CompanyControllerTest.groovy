@@ -2,6 +2,7 @@ package pl.futurecollars.invoicing.controller.company
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors
 import org.springframework.test.web.servlet.MockMvc
 import pl.futurecollars.invoicing.controller.AbstractControllerTest
 import pl.futurecollars.invoicing.model.Company
@@ -86,6 +87,7 @@ class CompanyControllerTest extends AbstractControllerTest {
                 put("$COMPANY_ENDPOINT/$id")
                         .content(jsonService.toJsonObject(updatedCompany))
                         .contentType(MediaType.APPLICATION_JSON)
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
         )
                 .andExpect(status().isNoContent())
 
