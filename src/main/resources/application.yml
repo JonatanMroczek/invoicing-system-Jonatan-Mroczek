@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: jpa
+    active: memory
   flyway:
     enabled: true
 
