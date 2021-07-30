@@ -3,16 +3,23 @@ server:
 
 spring:
   profiles:
-    active: memory
+    active: file
   flyway:
     enabled: true
+  security:
+    user:
+      name: jonatan
+      password: haslo
 
 invoicing-system:
-  database: memory
+  database: file
   database.directory: db
   database.invoices.file: invoices.txt
   database.companies.file: companies.txt
   database.id.file: id.txt
+  allowedOrigins: http://localhost:4200
+  csrf:
+    disable: true
 
 logging:
   level:

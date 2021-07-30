@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors
 import org.springframework.test.web.servlet.MockMvc
 import pl.futurecollars.invoicing.Helpers.TestHelpers
 import pl.futurecollars.invoicing.db.Database
@@ -23,6 +25,7 @@ import static pl.futurecollars.invoicing.Helpers.TestHelpers.resetIds
 @SpringBootTest
 @AutoConfigureMockMvc
 @Stepwise
+@WithMockUser
 
 class InvoiceControllerStepwiseTest extends Specification {
 
@@ -73,7 +76,8 @@ class InvoiceControllerStepwiseTest extends Specification {
         def invoiceAsJson = jsonService.toJsonObject(originalInvoice)
 
         when:
-        invoiceId = Integer.valueOf(mockMvc.perform(post(ENDPOINT).content(invoiceAsJson).contentType(MediaType.APPLICATION_JSON))
+        invoiceId = Integer.valueOf(mockMvc.perform(post(ENDPOINT).content(invoiceAsJson).contentType(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andReturn()
@@ -133,7 +137,8 @@ class InvoiceControllerStepwiseTest extends Specification {
         def invoiceAsJson = jsonService.toJsonObject(modifiedInvoice)
 
         expect:
-        mockMvc.perform(put("$ENDPOINT/$invoiceId").content(invoiceAsJson).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(put("$ENDPOINT/$invoiceId").content(invoiceAsJson).contentType(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andDo(print())
                 .andExpect(status().isNoContent())
     }
@@ -161,10 +166,10 @@ class InvoiceControllerStepwiseTest extends Specification {
     def "can delete invoice"() {
 
         expect:
-        mockMvc.perform(delete("$ENDPOINT/$invoiceId")).andExpect(status().isNoContent())
+        mockMvc.perform(delete("$ENDPOINT/$invoiceId").with(SecurityMockMvcRequestPostProcessors.csrf())).andExpect(status().isNoContent())
 
         and:
-        mockMvc.perform(delete("$ENDPOINT/$invoiceId")).andExpect(status().isNotFound())
+        mockMvc.perform(delete("$ENDPOINT/$invoiceId").with(SecurityMockMvcRequestPostProcessors.csrf())).andExpect(status().isNotFound())
 
         and:
         mockMvc.perform(get("/$ENDPOINT/$invoiceId")).andExpect(status().isNotFound())
